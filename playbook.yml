@@ -1,0 +1,31 @@
+---
+- name: All hosts
+  hosts: all
+  tasks:
+    - name: Execute the Uptime command over Command module
+      register: uptimeoutput
+      command: "uptime"
+    - debug:
+        var: uptimeoutput.stdout_lines
+    # - name: Reboot the Linux Machine
+    #   reboot:
+    #     reboot_timeout: 60
+    #   become: yes
+- name: Web servers
+  hosts: web
+  tasks:
+    - name: Install htop
+      apt:
+        name: htop
+        # state: present # -> to install
+        state: absent # -> to uninstall
+      become: yes
+    - name: Install nginx
+      apt:
+        name: nginx
+        state: present
+      become: yes
+    - name: Start service nginx, if not started
+      service:
+        name: nginx
+        state: started
