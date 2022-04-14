@@ -1,37 +1,33 @@
 ---
-- name: Base
-  hosts: all
-  become: yes
-  tasks:
-    - name: Update apt repo and cache on Debian
-      apt:
-        update_cache: yes
-        force_apt_get: yes
-    - name: Upgrade packages on servers
-      apt:
-        upgrade: dist
-        force_apt_get: yes
-    - name: Check if a reboot is needed on servers
-      register: reboot_required_file
-      stat:
-        path: /var/run/reboot-required
-        get_md5: no
-    - name: Reboot the server if kernel updated
-      reboot:
-        msg: "Reboot for kernel updates"
-        connect_timeout: 5
-        reboot_timeout: 300
-        pre_reboot_delay: 0
-        post_reboot_delay: 30
-        test_command: uptime
-      when: reboot_required_file.stat.exists
-    - name: Installing useful packages
-      apt:
-        name: "{{item}}"
-        state: present
-      with_items: "{{apt_packages}}"
-    - name: Set timezone to Europe/Paris
-      community.general.timezone:
-        name: Europe/Paris
-    - name: Set zsh as the root shell
-      command: "zsh"
+- name: Update apt repo and cache on Debian
+  apt:
+    update_cache: yes
+    force_apt_get: yes
+- name: Upgrade packages on servers
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+- name: Check if a reboot is needed on servers
+  register: reboot_required_file
+  stat:
+    path: /var/run/reboot-required
+    get_md5: no
+- name: Reboot the server if kernel updated
+  reboot:
+    msg: "Reboot for kernel updates"
+    connect_timeout: 5
+    reboot_timeout: 300
+    pre_reboot_delay: 0
+    post_reboot_delay: 30
+    test_command: uptime
+  when: reboot_required_file.stat.exists
+- name: Installing useful packages
+  apt:
+    name: "{{item}}"
+    state: present
+  with_items: "{{apt_packages}}"
+- name: Set timezone to Europe/Paris
+  community.general.timezone:
+    name: Europe/Paris
+- name: Set zsh as the root shell
+  command: "zsh"
