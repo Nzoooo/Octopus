@@ -1,0 +1,10 @@
+[Unit]
+Description=Result service
+
+[Service]
+User=result
+Group=result
+ExecStart=node /usr/local/bin/server.js
+
+[Install]
+WantedBy=multi-user.target
