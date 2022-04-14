@@ -1,0 +1,10 @@
+[Unit]
+Description=Worker service
+
+[Service]
+User=worker
+Group=worker
+ExecStart=java -jar /usr/local/bin/worker-jar-with-dependecies.jar
+
+[Install]
+WantedBy=multi-user.target

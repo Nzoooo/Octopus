@@ -12,3 +12,5 @@ apt_packages:
   - zsh
   - python3.6
   - nodejs
+  - maven
+  - openjdk-11-jre

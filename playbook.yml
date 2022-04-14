@@ -19,12 +19,10 @@
         name: htop
         # state: present # -> to install
         state: absent # -> to uninstall
-      become: yes
     - name: Install nginx
       apt:
         name: nginx
         state: present
-      become: yes
     - name: Start service nginx, if not started
       service:
         name: nginx

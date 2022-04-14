@@ -1,0 +1,15 @@
+---
+- name: Redis role
+  hosts: redis
+  become: yes
+  tasks:
+    - name: download redis
+      apt:
+        name: redis
+        state: present
+      notify:
+        - Enable Redis
+    - name: copy redis.conf file
+      copy: src=../files/redis.conf dest=/etc/redis/redis.conf group=redis owner=redis
+      notify:
+        - Restart Redis

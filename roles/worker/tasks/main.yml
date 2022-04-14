@@ -1,0 +1,50 @@
+---
+- name: Worker role
+  hosts: worker
+  become: yes
+  tasks:
+    - name: Create worker group
+      group:
+        name: worker
+        state: present
+    - name: Create worker user
+      user:
+        name: worker
+        groups: worker
+        shell: /sbin/nologin
+        append: yes
+        state: present
+        create_home: no
+    - name: Upload worker service to server
+      copy:
+        src: ../files/worker.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+    - name: Copy worker tar to server
+      copy:
+        src: ../files/worker.tar
+        dest: /tmp/worker.tar
+        owner: root
+        group: root
+    - name: Unzip worker tar on server
+      unarchive:
+        src: /tmp/worker.tar
+        dest: /usr/local
+        remote_src: yes
+    - name: Install worker dependencies
+      command: "mvn -B -f /usr/local/worker/ depency:resolve"
+    - name: Build the worker
+      command: "mvn package -f /usr/local/worker/"
+    - name: Copy worker-dependency.jar
+      copy:
+        src: /usr/local/worker/target/worker-jar-with-dependencies.jar
+        dest: /usr/local/bin/
+        mode: 0755
+        owner: root
+        group: root
+        remote_src: yes
+    - name: Run the worker
+      systemd:
+        name: worker
+        state: started
