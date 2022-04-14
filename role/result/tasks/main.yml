@@ -1,0 +1,48 @@
+---
+- name: Result
+  hosts: result
+  become: yes
+  tasks:
+    - name: create result group
+      group:
+        name: result
+        state: present
+    - name: create result user
+      user:
+        name: result
+        groups: result
+        shell: /sbin/nologin
+        append: yes
+        state: present
+        create_home: no
+    - name: Copy systemd service file to server
+      copy:
+        src: result.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+    - name: Copy tar to server
+      copy:
+        src: result.tar
+        dest: /tmp/result.tar
+        owner: root
+        group: root
+    - name: Unzip tar on server
+      unarchive:
+        src: /tmp/result.tar
+        dest: /usr/local
+        remote_src: yes
+    - name: Install result dependencies
+      command: "npm install"
+    - name: Copy binary to server
+      copy:
+        src: /usr/local/result/server.js
+        dest: /usr/local/bin
+        mode: 0755
+        owner: root
+        group: root
+        remote_src: yes
+    - name: Start result service
+      systemd:
+        name: result
+        state: started

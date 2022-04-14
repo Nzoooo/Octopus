@@ -1,0 +1,10 @@
+[Unit]
+Description=Poll service
+
+[Service]
+User=poll
+Group=poll
+ExecStart=/usr/local/bin/wsgi.py
+
+[Install]
+WantedBy=multi-user.target

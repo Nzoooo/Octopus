@@ -1,0 +1,48 @@
+---
+- name: Poll
+  hosts: poll
+  become: yes
+  tasks:
+    - name: create poll group
+      group:
+        name: poll
+        state: present
+    - name: create poll user
+      user:
+        name: poll
+        groups: poll
+        shell: /sbin/nologin
+        append: yes
+        state: present
+        create_home: no
+    - name: Copy systemd service file to server
+      copy:
+        src: poll.service
+        dest: /etc/systemd/system
+        owner: root
+        group: root
+    - name: Copy tar to server
+      copy:
+        src: poll.tar
+        dest: /tmp/poll.tar
+        owner: root
+        group: root
+    - name: Unzip tar on server
+      unarchive:
+        src: /tmp/poll.tar
+        dest: /usr/local
+        remote_src: yes
+    - name: Install poll dependencies
+      command: "pip3 install -r /usr/local/poll/requirements.txt"
+    - name: Copy binary to server
+      copy:
+        src: /usr/local/poll/wsgi.py
+        dest: /usr/local/bin
+        mode: 0755
+        owner: root
+        group: root
+        remote_src: yes
+    - name: Start poll service
+      systemd:
+        name: poll
+        state: started
