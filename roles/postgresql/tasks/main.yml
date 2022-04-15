@@ -19,7 +19,7 @@
   notify:
     - Restart Postgresql
 - name: Create database paul with schema file
-  - postgresql_db:
+  postgresql_db:
     name: paul
     state: dump
     target: ../files/schema.sql
