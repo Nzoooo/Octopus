@@ -29,7 +29,8 @@
     dest: /usr/local
     remote_src: yes
 - name: Install poll dependencies
-  command: "pip3 install -r /usr/local/poll/requirements.txt"
+  pip:
+    requirements: /usr/local/poll/requirements.txt
 - name: Copy binary to server
   copy:
     src: /usr/local/poll/wsgi.py

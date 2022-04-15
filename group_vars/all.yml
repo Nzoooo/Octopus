@@ -10,7 +10,7 @@ apt_packages:
   - curl
   - unzip
   - zsh
-  - python3.6
+  - python
   - nodejs
   - maven
   - openjdk-11-jre
