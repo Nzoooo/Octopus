@@ -1,6 +1,10 @@
 ---
-# redis_port: 6379
-# password: 
+# host: 
+# port: 6379
+user: paul
+password: democracyIsFragile
+database_name: paul
+# ansible_become_pass: 
 
 apt_packages:
   - apt-transport-https
@@ -11,6 +15,9 @@ apt_packages:
   - unzip
   - zsh
   - python
+  - python-pip
+  - python-psycopg2
   - nodejs
+  - npm
   - maven
   - openjdk-11-jre

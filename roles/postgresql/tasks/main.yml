@@ -1,26 +1,46 @@
 ---
-- name: download postgresql 12
+- name: Download postgresql 12
   apt:
-    name: postgresql-12
+    name: postgresql-11
     state: present
   notify:
-    - Enable Postgresql
-- name: download postgresql tools
+    - Start postgresql
+- name: Download postgresql client
   apt:
     name: postgresql-client
     state: present
   notify:
-    - Restart Postgresql
-- name: create user paul with password
-  postgresql_user:
-    db: paul
-    user: paul
-    password: "democracyIsFragile"
+    - Restart postgresql
+- name: Check if Database is initialized
+  stat:
+    path: /var/lib/postgresql/11/data/pg_hba.conf
+  register: result
+- name: Initialize the database
+  service:
+    name: postgresql
+    args: initdb
+  when: not result.stat.exists
+- name: Copy pg_hba.conf in the machine
+  copy:
+    src: ../files/pg_hba.conf
+    dest: /etc/postgresql/11/main/pg_hba.conf
+    owner: root
+    group: root
   notify:
-    - Restart Postgresql
-- name: Create database paul with schema file
+    - Restart postgresql
+- name: Create user with password and limited privileges
+  postgresql_user:
+    name: "{{user}}"
+    password: "{{password}}"
+    role_attr_flags: LOGIN, NOSUPERUSER
+- name: Create database
   postgresql_db:
-    name: paul
+    login_user: "{{user}}"
+    login_password: "{{password}}"
+    name: "{{database_name}}"
+- name: Create the schema of the database
+  postgresql_db:
+    name: "{{database_name}}"
     state: dump
     target: ../files/schema.sql
     target_opts: "-n public"

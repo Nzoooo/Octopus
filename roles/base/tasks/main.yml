@@ -29,5 +29,5 @@
 - name: Set timezone to Europe/Paris
   timezone:
     name: Europe/Paris
-- name: Set zsh as the root shell
-  command: "zsh"
+# - name: Set zsh as the root shell
+#   command: "zsh"

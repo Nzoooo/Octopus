@@ -13,13 +13,13 @@
     create_home: no
 - name: Copy systemd service file to server
   copy:
-    src: poll.service
+    src: ../files/poll.service
     dest: /etc/systemd/system
     owner: root
     group: root
 - name: Copy tar to server
   copy:
-    src: poll.tar
+    src: ../../../poll.tar
     dest: /tmp/poll.tar
     owner: root
     group: root

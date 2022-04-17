@@ -19,7 +19,7 @@
     group: root
 - name: Copy worker tar to server
   copy:
-    src: ../files/worker.tar
+    src: ../../../worker.tar
     dest: /tmp/worker.tar
     owner: root
     group: root
@@ -29,7 +29,7 @@
     dest: /usr/local
     remote_src: yes
 - name: Install worker dependencies
-  command: "mvn -B -f /usr/local/worker/ depency:resolve"
+  command: "mvn -B -f /usr/local/worker/ dependency:resolve"
 - name: Build the worker
   command: "mvn package -f /usr/local/worker/"
 - name: Copy worker-dependency.jar

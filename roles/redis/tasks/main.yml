@@ -1,11 +1,16 @@
 ---
-- name: download redis
+- name: Download redis
   apt:
     name: redis
     state: present
   notify:
-    - Enable Redis
-- name: copy redis.conf file
+    - Start redis
+- name: Copy redis.conf file
   copy: src=../files/redis.conf dest=/etc/redis/redis.conf group=redis owner=redis
   notify:
-    - Restart Redis
+    - Restart redis
+# - name: Change redis port and hostname
+#   redis:
+#     command: replica
+#     master_host: "{{host}}"
+#     master_port: "{{port}}"

@@ -9,11 +9,29 @@
   hosts: redis
   roles:
     - redis
+  handlers:
+    - name: Start redis
+      service:
+        name: redis
+        state: started
+    - name: Restart redis
+      service:
+        name: redis
+        state: restarted
 - name: PostGreSQL host
   become: yes
   hosts: postgresql
   roles:
     - postgresql
+  handlers:
+    - name: Start postgresql
+      service:
+        name: postgresql
+        state: started
+    - name: Restart postgresql
+      service:
+        name: postgresql
+        state: restarted
 - name: Poll host
   become: yes
   hosts: poll
